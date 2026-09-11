@@ -1,6 +1,6 @@
 # process-protocol
 
-Lispy **CLOS** subprocess API for [cl-stack](https://github.com/egao1980/cl-stack) — `run` / `launch` / `wait` / `kill`.
+Lispy **CLOS** subprocess API for [cl-stack](https://github.com/egao1980/cl-stack) — `run` / `launch` / `wait` / `kill` plus Python-`signal` handlers (`set-signal` / `raise-signal`). Windows ships in 0.2.0 (`:int` `:term` `:break` `:abrt`).
 
 | System | Role | Repo |
 |--------|------|------|
