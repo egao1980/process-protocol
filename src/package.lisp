@@ -1,9 +1,11 @@
 (defpackage #:process-protocol
   (:use #:cl)
   (:nicknames #:stack-process)
-  (:export #:process-error
+  (:export            #:process-error
            #:process-error-message
            #:process-timeout-error
+           #:process-signal-error
+           #:process-signal-error-signum
 
            #:process-backend
            #:*process-backend*
@@ -27,6 +29,13 @@
            #:stdin
            #:stdout
            #:stderr
-           #:exit-code))
+           #:exit-code
+
+           #:signal-number
+           #:signal-name
+           #:valid-signals
+           #:set-signal
+           #:get-signal
+           #:raise-signal))
 
 (in-package #:process-protocol)
