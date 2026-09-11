@@ -24,6 +24,11 @@
          (ok (eq :ignore (process-protocol:get-signal :term))))
     (process-protocol:set-signal :term :default)))
 
+(deftest windows-crt-names
+  (when (or (find :win32 *features*) (find :windows *features*))
+    (ok (member :break (process-protocol:valid-signals)))
+    (ok (member :abrt (process-protocol:valid-signals)))))
+
 (deftest raise-caught
   ;; USR1 is Unix-only; TERM is the portable CRT signal on Windows.
   (let ((name (if (member :usr1 (process-protocol:valid-signals)) :usr1 :term))

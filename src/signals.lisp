@@ -1,7 +1,8 @@
 (in-package #:process-protocol)
 
 ;;; Python signal — current-process handlers. Child kill stays PROCESS-KILL.
-;;; SBCL interrupt API. Windows CRT set: INT ILL FPE SEGV TERM BREAK ABRT.
+;;; Unix: SBCL enable-interrupt + unix-kill.
+;;; Windows: in-process dispatch (no enable-interrupt). CRT names only.
 
 (defparameter *signal-aliases*
   '((:sigint . :int) (:sigterm . :term) (:sighup . :hup) (:sigquit . :quit)
@@ -96,6 +97,9 @@
              (%ensure-signal-table))
     (sort keys #'string< :key #'symbol-name)))
 
+(defun %windows-p ()
+  (or (find :win32 *features*) (find :windows *features*)))
+
 (defun %pid ()
   (let ((fn (or (%sbcl-fbound :sb-unix "UNIX-GETPID")
                 (%sbcl-fbound :sb-posix "GETPID"))))
@@ -146,11 +150,12 @@
              :signum signo
              :message "handler must be :default, :ignore, or a function"))
     (setf (gethash signo *signal-handlers*) handler)
-    (%enable-interrupt signo
-                       (cond
-                         ((eq handler :default) :default)
-                         ((eq handler :ignore) :ignore)
-                         (t (%wrap-handler handler))))
+    (unless (%windows-p)
+      (%enable-interrupt signo
+                         (cond
+                           ((eq handler :default) :default)
+                           ((eq handler :ignore) :ignore)
+                           (t (%wrap-handler handler)))))
     handler))
 
 (defun get-signal (name)
@@ -158,7 +163,22 @@
   (let ((signo (signal-number name)))
     (gethash signo *signal-handlers* :default)))
 
+(defun %raise-windows (signo)
+  (let ((handler (gethash signo *signal-handlers* :default)))
+    (cond
+      ((eq handler :ignore) t)
+      ((functionp handler)
+       (funcall handler signo)
+       t)
+      (t
+       (error 'process-signal-error
+              :signum signo
+              :message "Windows raise-signal invokes a Lisp handler; :default is not run")))))
+
 (defun raise-signal (name)
-  "Send NAME to this process."
-  (%raise (signal-number name))
+  "Send NAME to this process. Unix: OS signal. Windows: in-process handler."
+  (let ((signo (signal-number name)))
+    (if (%windows-p)
+        (%raise-windows signo)
+        (%raise signo)))
   t)
