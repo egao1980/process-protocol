@@ -13,9 +13,9 @@
 (defmethod process-protocol:backend-run
     ((b recording-backend) command &rest keys
      &key input output error-output error directory env env-mode timeout
-       discard-stderr shell external-format)
+       discard-stderr shell external-format process-group)
   (declare (ignore input output error-output error directory env env-mode timeout
-                   discard-stderr shell external-format))
+                   discard-stderr shell external-format process-group))
   (push (cons command keys) (backend-calls b))
   (values 0 (make-array 0 :element-type '(unsigned-byte 8))
           (make-array 0 :element-type '(unsigned-byte 8))))
@@ -23,9 +23,9 @@
 (defmethod process-protocol:backend-launch
     ((b recording-backend) command &rest keys
      &key input output error-output error directory env env-mode shell
-       element-type external-format)
+       element-type external-format process-group)
   (declare (ignore input output error-output error directory env env-mode shell
-                   element-type external-format))
+                   element-type external-format process-group))
   (push (cons command keys) (backend-calls b))
   (make-instance 'process-protocol:process-handle))
 
