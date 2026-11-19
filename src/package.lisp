@@ -1,9 +1,13 @@
 (defpackage #:process-protocol
   (:use #:cl)
   (:nicknames #:stack-process)
-  (:export            #:process-error
+  (:export #:process-error
            #:process-error-message
+           #:process-error-command
+           #:process-error-cause
            #:process-timeout-error
+           #:process-timeout-error-timeout
+           #:process-timeout-error-process
            #:process-signal-error
            #:process-signal-error-signum
 
@@ -30,6 +34,13 @@
            #:stdout
            #:stderr
            #:exit-code
+
+           #:octet-vector
+           #:windows-p
+           #:merge-environment
+           #:environment-strings
+           #:normalize-capture
+           #:normalize-element-type
 
            #:signal-number
            #:signal-name
