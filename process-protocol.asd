@@ -1,5 +1,5 @@
 (defsystem "process-protocol"
-  :version "0.2.0"
+  :version "0.3.0"
   :description "CLOS subprocess protocol for cl-stack (run/launch/wait/kill + signal)"
   :author "egao1980"
   :license "MIT"
@@ -9,6 +9,7 @@
   :pathname "src"
   :components ((:file "package")
                (:file "conditions")
+               (:file "options")
                (:file "protocol")
                (:file "signals"))
   :in-order-to ((test-op (test-op "process-protocol/tests"))))
@@ -19,6 +20,7 @@
   :serial t
   :components ((:file "package")
                (:file "protocol-test")
+               (:file "options-test")
                (:file "signal-test"))
   :perform (test-op (o c)
              (unless (symbol-call :rove :run c)
