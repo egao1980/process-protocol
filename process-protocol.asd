@@ -1,6 +1,6 @@
 (defsystem "process-protocol"
-  :version "0.3.0"
-  :description "CLOS subprocess protocol for cl-stack (run/launch/wait/kill + signal)"
+  :version "0.4.0"
+  :description "CLOS subprocess protocol for cl-stack (run/launch/wait/kill + process groups + signal)"
   :author "egao1980"
   :license "MIT"
   :depends-on ()

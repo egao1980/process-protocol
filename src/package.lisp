@@ -10,6 +10,8 @@
            #:process-timeout-error-process
            #:process-signal-error
            #:process-signal-error-signum
+           #:process-group-error
+           #:process-group-error-process
 
            #:process-backend
            #:*process-backend*
@@ -24,6 +26,8 @@
            #:process-stdout
            #:process-stderr
            #:process-exit-code
+           #:process-pid
+           #:backend-supports-p
 
            #:run
            #:launch
@@ -34,6 +38,8 @@
            #:stdout
            #:stderr
            #:exit-code
+           #:pid
+           #:supports-p
 
            #:octet-vector
            #:windows-p

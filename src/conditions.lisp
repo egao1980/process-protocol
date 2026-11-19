@@ -30,3 +30,17 @@ BACKEND-RUN kills the child when control leaves it without that restart.")
   ((signum :initarg :signum :reader process-signal-error-signum :initform nil))
   (:report (lambda (c s)
              (format s "process signal error~@[: ~a~]" (process-error-message c)))))
+
+(define-condition process-group-error (process-error)
+  ((process :initarg :process :reader process-group-error-process :initform nil
+            :documentation "The PROCESS-HANDLE involved, or NIL when the launch was refused."))
+  (:documentation "A process-group request cannot be honoured: KILL :TREE T on a handle
+not launched with :PROCESS-GROUP T (backends offer a CONTINUE restart that kills
+the direct child only), or :PROCESS-GROUP T on a backend / platform / option
+combination that cannot start the child in its own group.")
+  (:report (lambda (c s)
+             (format s "process group error~@[: ~a~]~@[ (~{~a~^ ~})~]"
+                     (or (process-error-message c)
+                         "the process does not lead its own process group")
+                     (let ((cmd (process-error-command c)))
+                       (if (listp cmd) cmd (list cmd)))))))
