@@ -77,9 +77,12 @@ or RUN with :PROCESS-GROUP T; otherwise PROCESS-GROUP-ERROR, with a CONTINUE
 restart that kills the direct child only. Unix: the signal goes to the
 child's process group (killpg), even after the child itself exited, so
 grandchildren still in the group are reached; a descendant that moved to
-another group or session (setsid, a pty) is not. Windows: taskkill /T /F /PID,
-which walks parent pids at kill time (always forced); descendants whose parent
-already exited are not reached. Killing an exited process is not an error."))
+another group or session (setsid, a pty) is not. Windows: always forced. A job
+object assigned at launch reaches every descendant, also after the child
+exited (process-backend-uiop on SBCL); taskkill /T /F /PID walks parent pids
+at kill time and misses descendants whose parent already exited, which
+includes programs exec'd by an MSYS / Cygwin shell. Killing an exited process
+is not an error."))
 
 (defgeneric process-alive-p (handle))
 
